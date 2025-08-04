@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Hotel extends Model
+{
+    protected $fillable = [
+        'name',
+        'location',
+        'category_id'
+    ];
+    protected $table = 'hotels';
+
+    // public function category()
+    // {
+    //     return $this->belongsTo(Category::class);
+    // }
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(HotelReview::class);
+    }
+
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+}
