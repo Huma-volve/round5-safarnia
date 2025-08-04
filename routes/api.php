@@ -7,11 +7,19 @@ use Symfony\Component\Process\Process;
 use App\Http\Controllers\Api\AuthController;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-// Route::controller(AuthController::class)->group(function () {
-//     Route::post('/register', 'register');
-//     Route::post('/login', 'login');
-//     Route::post('/logout', 'logout');
-// });
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/register', 'register');
+    Route::post('/login', 'login');
+    Route::post('/otp', 'otp');
+    Route::post('/forgot-password', 'forgotPassword');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', 'logout');
+        Route::post('/reset-password', 'resetPassword');
+        Route::post('/delete-account', 'deleteAccount');
+        Route::post('/update-password', 'updatePassword');
+    });
+});
 
 
 
