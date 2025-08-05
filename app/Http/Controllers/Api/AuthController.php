@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Helpers\Helpers;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,26 +21,26 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        $validate = $request->validated();
-        $user = User::create($validate);
+        $validatedData = $request->validated();
+        $user = User::create($validatedData);
         $data['email'] = $user->email;
         event(new Registered($user));
-        return ApiResponse::sendResponse(201, 'User registered successfully', $data);
+        return ApiResponse::sendResponse(201,'Otp Sent Successfully', $data);
     }
 
     public function login(loginRequest $request)
     {
-        $validate = $request->validated();
-        $user = User::where('email', $validate['email'])->first();
+        $validatedData = $request->validated();
+        $user = User::where('email', $validatedData['email'])->first();
         if (!$user) {
             return ApiResponse::sendResponse(400, 'Invalid Credentials', null);
         }
         if (!$user->email_verified_at) {
             return ApiResponse::sendResponse(403, 'Account is not verified. Please verify your email before logging in.', null);
         }
-        if (auth()->attempt(['email' => $validate['email'], 'password' => $validate['password']])) {
+        if (auth()->attempt(['email' => $validatedData['email'], 'password' => $validatedData['password']])) {
             $user = auth()->user();
-            $data['token'] = $user->createToken('RegisterToken')->plainTextToken;
+            $data['token'] = Helpers::createToken($user, 'LoginToken');
             $data['name'] = $user->name;
             $data['email'] = $user->email;
             $data['phone'] = $user->phone;
@@ -59,11 +60,11 @@ class AuthController extends Controller
             if ($user->otp_expire_at < now()) {
                 return ApiResponse::sendResponse(400, 'OTP Expired', null);
             }
-            $user->email_verified_at = now();
+            $user->markEmailAsVerified();
             $user->otp = null;
             $user->otp_expire_at = null;
             $user->save();
-            $data['token'] = $user->createToken('RegisterToken')->plainTextToken;
+            $data['token'] = Helpers::createToken($user, 'RegisterToken');
             $data['name'] = $user->name;
             $data['email'] = $user->email;
             $data['phone'] = $user->phone;
