@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('hotel_reviews', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hotel_id')->references('id')->on('hotels');
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->unsignedInteger('rating');
-            $table->text('review_text');
+            $table->string('title', 255);
+            $table->text('description');
+            $table->string('image', 255);
             $table->timestamps();
+
         });
 
         Schema::enableForeignKeyConstraints();
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hotel_reviews');
+        Schema::dropIfExists('categories');
     }
 };
