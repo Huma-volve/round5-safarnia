@@ -34,4 +34,3 @@ Route::get('/webhook-handler', function () {
 });
 
 Route::get('/cars', [CarController::class, 'index']);
-Route::get('/cars/{id}', [CarController::class, 'show']);

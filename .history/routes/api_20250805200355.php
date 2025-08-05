@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Process\Process;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\CarController;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 // Route::controller(AuthController::class)->group(function () {
@@ -32,6 +31,3 @@ Route::get('/webhook-handler', function () {
 
     return response('Deployment completed successfully.', 200);
 });
-
-Route::get('/cars', [CarController::class, 'index']);
-Route::get('/cars/{id}', [CarController::class, 'show']);
