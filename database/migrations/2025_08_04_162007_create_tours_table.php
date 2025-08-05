@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('hotels', function (Blueprint $table) {
+        Schema::create('tours', function (Blueprint $table) {
+
             $table->id();
-            $table->foreignId('category_id')->references('id')->on('categories');
-            $table->string('name');
-            $table->string('location');
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('Categories');
+            $table->string('title', 255);
+            $table->text('description');
+            $table->decimal('price', 8, 2);
+            $table->string('image', 255);
+            $table->integer('views');
             $table->timestamps();
+
         });
 
         Schema::enableForeignKeyConstraints();
@@ -29,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hotels');
+        Schema::dropIfExists('tours');
     }
 };

@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('tour_bookings', function (Blueprint $table) {
             $table->id();
-            $table->string('image_path');
-            $table->morphs('imageable');
+            $table->unsignedBigInteger('user_id')->comment('FK');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('tour_slot_id')->comment('FK');
+            $table->enum('status', ["pending","confirmed","cancelled"]);
             $table->timestamps();
+
+
         });
 
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -27,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('tour_bookings');
     }
 };

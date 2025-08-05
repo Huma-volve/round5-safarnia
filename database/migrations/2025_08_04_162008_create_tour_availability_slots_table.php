@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('room_availability_slots', function (Blueprint $table) {
+        Schema::create('tour_availability_slots', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')->references('id')->on('rooms');
-            $table->date('available_from');
-            $table->date('available_to');
-            $table->timestamps();
+            $table->unsignedBigInteger('tour_id')->comment('FK');
+            $table->dateTime('start_time');
+            $table->integer('available_seats');
+                $table->timestamps();
+
+            $table->dateTime('end_time');
         });
 
         Schema::enableForeignKeyConstraints();
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('room_availability_slots');
+        Schema::dropIfExists('tour_availability_slots');
     }
 };
