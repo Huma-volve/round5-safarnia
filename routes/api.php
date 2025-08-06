@@ -43,10 +43,10 @@ Route::get('/webhook-handler', function () {
 });
 
 
-Route::post('/hotel/review/{id}', [HotelReviewController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/hotel/review', [HotelReviewController::class, 'store'])->middleware('auth:sanctum');
 Route::controller(RoomBookingController::class)
     ->middleware('auth:sanctum')
     ->group(function () {
-        Route::post('/booking/room/{id}', 'createRoomBooking');
+        Route::post('/booking/room', 'createRoomBooking');
         Route::get('/my/room/bookings', 'getUserRoomBookings');
     });
