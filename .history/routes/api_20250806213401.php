@@ -9,8 +9,6 @@ use App\Http\Controllers\Api\HotelReviewController;
 use App\Http\Controllers\Api\RoomBookingController;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Http\Controllers\CarController;
-use App\Http\Controllers\BookingController;
-
 
 // Route::controller(AuthController::class)->group(function () {
 //     Route::post('/register', 'register');
