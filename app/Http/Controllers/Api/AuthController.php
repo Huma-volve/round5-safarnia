@@ -23,9 +23,12 @@ class AuthController extends Controller
     {
         $validatedData = $request->validated();
         $user = User::create($validatedData);
+        $user->markEmailAsVerified();
+        $data['token'] = Helpers::createToken($user, 'LoginToken');
+        $data['name'] = $user->name;
         $data['email'] = $user->email;
-        event(new Registered($user));
-        return ApiResponse::sendResponse(201,'Otp Sent Successfully', $data);
+        // event(new Registered($user));
+        return ApiResponse::sendResponse(201, 'User Created Successfully', $data);
     }
 
     public function login(loginRequest $request)
