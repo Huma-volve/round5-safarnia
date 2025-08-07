@@ -6,6 +6,8 @@ use App\Models\Car;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\Charge;
 
 class BookingController extends Controller
 {
@@ -49,6 +51,41 @@ class BookingController extends Controller
         }
 
         $totalPrice = $car->daily_rate * $days;
+        $amountInCents = (int) ($totalPrice * 100); // Stripe uses cents
+
+        try {
+            // Set API key
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            // Create charge
+            $charge = Charge::create([
+                'amount' => $amountInCents,
+                'currency' => 'usd',
+                //'source' => $request->payment_method_id, // from frontend (e.g., Stripe Elements)
+                'source' => 'tok_visa',
+                'description' => "Car rental: {$car->model}",
+            ]);
+
+            // ✅ Payment succeeded
+            $booking = Booking::create([
+                'user_id' => Auth::id(),
+                'car_id' => $car->id,
+                'pickup_date' => $request->pickup_date,
+                'return_date' => $request->return_date,
+                'total_price' => $totalPrice,
+                'status' => 'confirmed',
+                'payment_id' => $charge->id, // save Stripe charge ID
+            ]);
+
+        } catch (\Stripe\Exception\CardException $e) {
+            return response()->json([
+                'message' => 'Payment failed: ' . $e->getError()->message
+            ], 402);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred: ' . $e->getMessage()
+            ], 500);
+        }
 
         // Step 5: Create the booking
         $booking = Booking::create([

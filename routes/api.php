@@ -44,3 +44,11 @@ Route::get('/webhook-handler', function () {
 
     return response('Deployment completed successfully.', 200);
 });
+
+Route::get('/cars', [CarController::class, 'index']);
+Route::get('/cars/{id}', [CarController::class, 'show']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/bookings', [BookingController::class, 'store']);
+    Route::get('/bookings/my', [BookingController::class, 'myBookings']);
+});
