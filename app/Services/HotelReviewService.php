@@ -23,7 +23,7 @@ class HotelReviewService
         $hotelId = $room->hotel_id;
         // Check if user has a booking in this hotel
         $hasBooking = RoomBooking::where('user_id', $userId)
-            ->whereHas('rooms', function ($query) use ($hotelId) {
+            ->whereHas('room', function ($query) use ($hotelId) {
                 $query->where('hotel_id', $hotelId);
             })
             ->exists();
@@ -35,7 +35,7 @@ class HotelReviewService
         // Optional image upload
         if (isset($data['image'])) {
             $imagePath = $data['image']->store('images', 'public');
-            $data['image'] = $imagePath;
+            $data['image'] = asset(Storage::url($imagePath));
         }
 
         // Create the review (using hotel_id extracted from room)
@@ -48,5 +48,18 @@ class HotelReviewService
         ]);
 
         return ApiResponse::sendResponse(201, 'Review added successfully.', $review);
+    }
+    // عرض اخر 20 تقييم للأوتيل
+    public function getReviewsForHotel($roomId)
+    {
+        $room = Room::findOrFail($roomId);
+        $hotelId = $room->hotel_id;
+        $reviews = HotelReview::where('hotel_id', $hotelId)
+            ->with(['user:id,name,image'])
+            ->latest()
+            ->take(20)
+            ->get();
+
+        return ApiResponse::sendResponse(200, 'Hotel reviews retrieved successfully.', $reviews);
     }
 }
