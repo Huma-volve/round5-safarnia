@@ -11,15 +11,34 @@ class CategorySeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public static int $hotelCategoryId;
-
     public function run(): void
     {
-        $hotelCategory = Category::create([
-            'title' => 'Hotel',
-            'description' => 'All hotel-related services',
-            'image' => 'hotels.jpg'
+
+        Category::create([
+            "title"=>"Fright",
+            "description"=>'comfortable and fast',
+            "image"=>'ad.jpg'
         ]);
-        self::$hotelCategoryId = $hotelCategory->id;
-    }
+
+        Category::create([
+            "title"=>"Cars",
+            "description"=>'safety and fast',
+
+            "image"=>'fg.jpg']);
+
+            Category::create([
+            "title"=>"Tours",
+            "description"=>'enjoyment and recreation',
+
+            "image"=>'kh.jpg']);
+
+            Category::create([
+            "title"=>"Hotel",
+            "description"=>'luxury and extravagance',
+
+            "image"=>'OIP.jpg']);
+
+
+            }
+
 }
