@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('room_id')->references('id')->on('rooms');
             $table->date('available_from');
             $table->date('available_to');
+            $table->decimal('discount', 5, 2)->nullable();
             $table->timestamps();
         });
 

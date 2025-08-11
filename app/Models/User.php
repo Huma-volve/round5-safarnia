@@ -2,16 +2,32 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Notifications\Api\EmailVerificationNotification;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable , HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens;
+
+    public function sendEmailVerificationNotification()
+    {
+        $token = $this->generateOtpToken();
+        $this->notify(new EmailVerificationNotification($token));
+    }
+
+    public function generateOtpToken()
+    {
+        $token = rand(10000, 99999);
+        $this->otp = $token;
+        $this->otp_expire_at = now()->addMinutes(10);
+        $this->save();
+        return $token;
+    }
 
     protected $table = 'users';
     /**

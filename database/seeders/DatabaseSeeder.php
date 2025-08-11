@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TourAvailabilitySlotSeeder::class);
         $this->call([ TourBookingSeeder::class,]);
                 $this->call([ ProfileSeeder::class,]);
-
+$this->call([HotelSeeder::class,]);
 
     }
 }

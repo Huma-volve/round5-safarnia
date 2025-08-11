@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->unsignedInteger('rating');
             $table->text('review_text');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
 
