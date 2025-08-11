@@ -14,17 +14,18 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('tours', function (Blueprint $table) {
-
             $table->id();
             $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('Categories');
+            $table->foreign('category_id')->references('id')->on('categories'); // ✅ lowercase table name
             $table->string('title', 255);
+            $table->string('location');
             $table->text('description');
             $table->decimal('price', 8, 2);
             $table->string('image', 255);
-            $table->integer('views');
+            $table->integer('views')->default(0);
+            $table->boolean('is_recommended')->default(false);
+            $table->float('rating')->default(0); // ✅ تم حذف ->after
             $table->timestamps();
-
         });
 
         Schema::enableForeignKeyConstraints();
