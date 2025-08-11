@@ -11,10 +11,9 @@ class CategorySeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public static int $hotelCategoryId;
-
     public function run(): void
     {
+
         // Create categories
         $categories = [
             [
@@ -43,4 +42,33 @@ class CategorySeeder extends Seeder
             Category::create($category);
         }
     }
+
+
+        Category::create([
+            "title"=>"Fright",
+            "description"=>'comfortable and fast',
+            "image"=>'ad.jpg'
+        ]);
+
+        Category::create([
+            "title"=>"Cars",
+            "description"=>'safety and fast',
+
+            "image"=>'fg.jpg']);
+
+            Category::create([
+            "title"=>"Tours",
+            "description"=>'enjoyment and recreation',
+
+            "image"=>'kh.jpg']);
+
+            Category::create([
+            "title"=>"Hotel",
+            "description"=>'luxury and extravagance',
+
+            "image"=>'OIP.jpg']);
+
+
+            }
+
 }

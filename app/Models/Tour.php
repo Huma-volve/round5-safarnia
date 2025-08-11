@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tour extends Model
 {
-    protected $fillable=['category_id','title','description','price','image','views'];
+    protected $fillable=['category_id','title','location','rating','description','price','image','views'];
 
 
     public function category()
@@ -19,4 +19,6 @@ class Tour extends Model
     {
         return $this->hasMany(TourAvailabilitySlot::class);
     }
+
+    
 }

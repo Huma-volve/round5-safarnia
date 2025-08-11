@@ -24,7 +24,7 @@ class AddReviewRequest extends FormRequest
         return [
             'room_id' => 'required|exists:rooms,id',
             'rating' => 'required|integer|min:1|max:5',
-            'review_text' => 'required|text',
+            'review_text' => 'required','string','max:1500',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
