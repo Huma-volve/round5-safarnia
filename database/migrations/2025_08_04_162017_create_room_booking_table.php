@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoomBookingStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->foreignId('room_id')->references('id')->on('rooms');
             $table->date('check_in_date');
             $table->date('check_out_date');
-            $table->string('status');
+            $table->string('status')->default(RoomBookingStatus::Pending->value);
             $table->unsignedInteger('adults_count');
             $table->unsignedInteger('children_count');
             $table->unsignedInteger('infants_count');

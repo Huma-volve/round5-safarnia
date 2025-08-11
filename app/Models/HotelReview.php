@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class HotelReview extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'hotel_id',
         'user_id',
         'rating',
-        'review_text'
+        'review_text',
+        'image'
     ];
     protected $table = 'hotel_reviews';
 
