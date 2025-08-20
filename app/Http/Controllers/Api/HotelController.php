@@ -12,6 +12,7 @@ class HotelController extends Controller
 {
     public function __construct(
         protected HotelsService $hotelsService,
+        protected SearchHotelService $searchHotelService
     ) {}
     // عرض الغرف المتاحة في هذا اليوم في هذا الاوتيل
     public function getRoomsForHotel($hotelId)
@@ -27,6 +28,16 @@ class HotelController extends Controller
     public function getHotels()
     {
         return $this->hotelsService->getNearbyHotels();
+    }
+    public function searchHotels(Request $request)
+    {
+        $search = $request->input('key'); // الكلمة اللي المستخدم بيدور عليها
+        return  $this->searchHotelService->searchHotels($search);
+    }
+    public function searchRooms(Request $request)
+    {
+        $search = $request->input('key'); // الكلمة اللي المستخدم بيدور عليها
+        return  $this->searchHotelService->searchRooms($search);
     }
 
 }

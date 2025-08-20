@@ -110,8 +110,10 @@ Route::post('/hotel/review', [HotelReviewController::class, 'store'])->middlewar
 Route::get('/hotel/review/{roomId}', [HotelReviewController::class, 'getReviewsForHotel']);
 Route::get('/hotel/rooms/{hotel_id}', [HotelController::class, 'getRoomsForHotel']);
 Route::get('/room/details/{room_id}', [HotelController::class, 'getRoomDetails']);
-Route::get('/hotels', [HotelController::class, 'getHotels']);
 
+Route::get('/hotels',[HotelController::class, 'getHotels']);
+Route::get('/hotels/search',[HotelController::class, 'searchHotels']);
+Route::get('/rooms/search',[HotelController::class,'searchRooms']);
 Route::controller(RoomBookingController::class)
     ->middleware('auth:sanctum')
     ->group(function () {
