@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\TourSlot;
 use App\Models\TourBooking;
+use Illuminate\Database\Seeder;
+use App\Models\TourAvailabilitySlot;
 
 class TourBookingSeeder extends Seeder
 {
@@ -20,7 +21,7 @@ class TourBookingSeeder extends Seeder
             return;
         }
 
-        $slots = TourSlot::take(3)->get();
+        $slots = TourAvailabilitySlot::take(3)->get();
         if ($slots->isEmpty()) {
             $this->command->warn("No tour slots found. Please create tour slots first.");
             return;

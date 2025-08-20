@@ -14,19 +14,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(10)->create();
 
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
 
-        $this->call(CategorySeeder::class);
-        $this->call(RecommdedTourSeeder::class);
-        $this->call(TourAvailabilitySlotSeeder::class);
-        $this->call([ TourBookingSeeder::class,]);
-                $this->call([ ProfileSeeder::class,]);
-$this->call([HotelSeeder::class,]);
+ 
+
+          $this->call([
+            CategorySeeder::class,
+            RecommdedTourSeeder::class,
+            TourAvailabilitySlotSeeder::class,
+            TourBookingSeeder::class,
+            ProfileSeeder::class,
+            // HotelSeeder::class,
+            FlightSeeder::class,
+            CarSeeder::class,
+    ]);
 
     }
 }
