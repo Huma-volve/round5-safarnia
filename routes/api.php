@@ -122,10 +122,6 @@ Route::controller(RoomBookingController::class)
         Route::put('/booking/room/{bookingId}', 'updateRoomBooking'); // تعديل الحجز
         Route::patch('/booking/room/cancel/{bookingId}', 'cancelRoomBooking'); // إلغاء الحجز
     });
-
-/**
- * Flights
- */
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(FlightController::class)->group(function () {
         Route::get('/flights', 'index');
