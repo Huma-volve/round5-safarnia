@@ -28,7 +28,7 @@ class FlightController extends Controller
         if(!$flight){
             return ApiResponse::sendResponse(404, 'Flight not found');
         }
-        return ApiResponse::sendResponse(200, 'Flight retrieved successfully', new FlightResource($flight));
+        return ApiResponse::sendResponse(200, 'Flight retrieved successfully', $flight);
     }
 
 }
