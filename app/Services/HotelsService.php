@@ -38,7 +38,7 @@ class HotelsService
                     'id' => $room->id,
                     'price' => $room->price,
                     'discount' => $discount,
-                    'image' => $firstImage ? asset('storage/' . $firstImage->image_path) : null,
+                    'image' => $firstImage ? asset('public/storage/' . $firstImage->image_path) : null,
                 ];
             }
         );
@@ -97,7 +97,7 @@ class HotelsService
                 'id' => $hotel->id,
                 'name' => $hotel->name,
                 'location' => $hotel->location,
-                'image' => $firstImage ? asset('storage/' . $firstImage->image_path) : null,
+                'image' => $firstImage ? asset('public/storage/' . $firstImage->image_path) : null,
                 'average_rating' => round($averageRating, 2),
             ];
         });
