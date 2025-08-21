@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+
         // Seed in proper order
         $this->call([
             // 1. Categories first
@@ -38,6 +39,7 @@ class DatabaseSeeder extends Seeder
             
             // 5. Profile data
             ProfileSeeder::class,
+            HotelSeeder::class,
             
             // 6. Other services
             // HotelSeeder::class,
