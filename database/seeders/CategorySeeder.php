@@ -41,6 +41,32 @@ class CategorySeeder extends Seeder
         foreach ($categories as $category) {
             Category::create($category);
         }
-    }
+        Category::create([
+            "title"=>"Fright",
+            "description"=>'comfortable and fast',
+            "image"=>'ad.jpg'
+        ]);
 
-}
+        Category::create([
+            "title"=>"Cars",
+            "description"=>'safety and fast',
+
+            "image"=>'fg.jpg']);
+
+            Category::create([
+            "title"=>"Tours",
+            "description"=>'enjoyment and recreation',
+
+            "image"=>'kh.jpg']);
+
+            Category::create([
+            "title"=>"Hotel",
+            "description"=>'luxury and extravagance',
+
+            "image"=>'OIP.jpg']);
+
+
+            }
+
+        }
+
