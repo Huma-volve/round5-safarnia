@@ -15,10 +15,14 @@ class TourBookingResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-                'id' => $this->id,
-          'tour_title' => $this->slot->tour->title ?? 'N/A',
-            'slot_time' => $this->slot->start_time . ' - ' . $this->slot->end_time,
+            'id' => $this->id,
+            'tour_title' => $this->tourSlot->tour->title ?? 'N/A',
+            'slot_time' => $this->tourSlot->start_time . ' - ' . $this->tourSlot->end_time,
             'status' => $this->status,
+            'seats_count' => $this->seats_count,
+            'total_price' => $this->total_price,
+            'notes' => $this->notes,
+            'created_at' => $this->created_at,
         ];
     }
 }
