@@ -21,18 +21,17 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
- 
 
-          $this->call([
+
+        $this->call([
             CategorySeeder::class,
             RecommdedTourSeeder::class,
             TourAvailabilitySlotSeeder::class,
             TourBookingSeeder::class,
             ProfileSeeder::class,
-            // HotelSeeder::class,
+            HotelSeeder::class,
             FlightSeeder::class,
             CarSeeder::class,
-    ]);
-
+        ]);
     }
 }

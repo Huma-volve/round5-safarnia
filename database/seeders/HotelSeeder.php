@@ -20,12 +20,12 @@ class HotelSeeder extends Seeder
     {
         // إنشاء مستخدمين
         $users = User::factory()->count(5)->create();
-
+        $hotelCategoryId = Category::where('title', 'hotel')->first()->id;
         // إنشاء فنادق، غرف، صور وتوفر
         Hotel::factory()
             ->count(5)
             ->create([
-            'category_id' => CategorySeeder::$hotelCategoryId
+            'category_id' => $hotelCategoryId
         ])
             ->each(function ($hotel) use ($users) {
                 // إضافة صورة للفندق
