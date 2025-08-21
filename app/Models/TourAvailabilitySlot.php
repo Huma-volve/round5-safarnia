@@ -6,9 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourAvailabilitySlot extends Model
 {
-    protected $fillable=['tour_id','start_time','available_seats','end_time'];
+    protected $fillable = ['tour_id', 'start_time', 'end_time', 'available_seats', 'max_seats'];
 
-        public function tour()
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
+        'available_seats' => 'integer',
+        'max_seats' => 'integer',
+    ];
+
+    public function tour()
     {
         return $this->belongsTo(Tour::class);
     }
