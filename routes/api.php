@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\HotelReviewController;
 use App\Http\Controllers\Api\RoomBookingController;
 use App\Http\Controllers\Api\FlightBookingController;
+use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
@@ -62,34 +63,75 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 /**
- * General Data
+ * General Data & Home Page
  */
 Route::get('allcategory', [ApiController::class, 'all']);
-Route::get('recommendedtour', [RecommendedTourController::class, 'recommended']);
+Route::get('categories-with-count', [ApiController::class, 'categoriesWithCount']);
+Route::get('categories-with-recommended-tours', [ApiController::class, 'categoriesWithRecommendedTours']);
+Route::get('home-page', [ApiController::class, 'homePage']);
 
 /**
- * Tours & Slots
+ * Recommended Tours
+ */
+Route::get('recommendedtour', [RecommendedTourController::class, 'recommended']);
+Route::get('top-rated-tours', [RecommendedTourController::class, 'topRated']);
+Route::get('most-viewed-tours', [RecommendedTourController::class, 'mostViewed']);
+Route::get('trending-tours', [RecommendedTourController::class, 'trending']);
+Route::get('recommended-tours-by-category/{categoryId}', [RecommendedTourController::class, 'byCategory']);
+
+/**
+ * Tours & Search
+ */
+Route::controller(TourController::class)->group(function () {
+    Route::get('/tours', 'index');
+    Route::get('/tours/{tour}', 'show');
+    Route::get('/tours-by-category/{category}', 'getByCategory');
+    Route::get('/top-rated-tours', 'getTopRated');
+    Route::get('/most-viewed-tours', 'getMostViewed');
+    Route::get('/available-tours', 'getAvailableTours');
+    Route::get('/categories-with-tours-count', 'getCategoriesWithCount');
+});
+
+/**
+ * Tour Availability Slots
  */
 Route::prefix('tours/{tour}')->group(function () {
     Route::get('slots', [TourAvailSlotController::class, 'index']);
+    Route::get('slots-by-date-range', [TourAvailSlotController::class, 'getByDateRange']);
+    Route::get('all-slots', [TourAvailSlotController::class, 'getAllSlots']);
+
+    // Admin routes (should be protected with admin middleware)
     Route::post('slots', [TourAvailSlotController::class, 'store']);
+    Route::post('bulk-create-slots', [TourAvailSlotController::class, 'bulkCreate']);
 });
+
 Route::put('slots/{slot}', [TourAvailSlotController::class, 'update']);
 Route::delete('slots/{slot}', [TourAvailSlotController::class, 'destroy']);
 
+/**
+ * Tour Bookings
+ */
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/tour-bookings', [TourBookingController::class, 'store']);
-    Route::put('/tour-bookings/{id}', [TourBookingController::class, 'update']);
-    Route::delete('/tour-bookings/{id}', [TourBookingController::class, 'destroy']);
-    Route::get('/my-tour-bookings', [TourBookingController::class, 'myBookings']);
+    Route::controller(TourBookingController::class)->group(function () {
+        Route::post('/tour-bookings', 'store');
+        Route::get('/tour-bookings/{id}', 'show');
+        Route::put('/tour-bookings/{id}', 'update');
+        Route::get('/my-tour-bookings', 'myBookings');
+        Route::post('/tour-bookings/{id}/cancel', 'cancel');
+    });
 });
 
 /**
- * Profile
+ * Profile Management
  */
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show']);
-    Route::post('/profile', [ProfileController::class, 'update']);
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile', 'show');
+        Route::post('/profile', 'update');
+        Route::post('/profile/delete-account', 'deleteAccount');
+        Route::post('/profile/update-password', 'updatePassword');
+        Route::get('/profile/booking-history', 'bookingHistory');
+    });
 });
 
 /**

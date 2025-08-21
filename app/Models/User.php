@@ -40,6 +40,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'phone',
+        'country',
+        'image',
     ];
 
     /**
@@ -50,6 +53,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'otp',
+        'otp_expire_at',
     ];
 
     /**
@@ -61,9 +66,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'otp_expire_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
+
     public function roomBookings()
     {
         return $this->hasMany(RoomBooking::class);
@@ -77,5 +84,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function flightBookings()
     {
         return $this->hasMany(FlightBooking::class);
+    }
+
+    public function tourBookings()
+    {
+        return $this->hasMany(TourBooking::class);
     }
 }
