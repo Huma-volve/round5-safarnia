@@ -27,20 +27,20 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // 1. Categories first
             CategorySeeder::class,
-            
+
             // 2. Tours
             TourSeeder::class,
-            
+
             // 3. Tour availability slots
             TourAvailabilitySlotSeeder::class,
-            
+
             // 4. Tour bookings
             TourBookingSeeder::class,
-            
+
             // 5. Profile data
             ProfileSeeder::class,
             HotelSeeder::class,
-            
+
             // 6. Other services
             // HotelSeeder::class,
             FlightSeeder::class,

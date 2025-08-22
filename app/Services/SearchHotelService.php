@@ -19,7 +19,7 @@ class SearchHotelService
             $hotel->average_rating = round($hotel->reviews()->avg('rating') ?? 0, 2);
             // جلب صورة الفندق
             $hotel->image_url = optional($hotel->images->first(), function ($image) {
-                return asset('storage/' . $image->image_path);
+                return $image->image_path;
             });
             unset($hotel->images);
             return $hotel;
@@ -58,7 +58,7 @@ class SearchHotelService
         // جلب النتائج مع صورة الغرفة
         $rooms = $roomsQuery->orderByDesc('price')->get()->map(function ($room) {
             $room->image_url = optional($room->images->first(), function ($image) {
-                return asset('storage/' . $image->image_path);
+                return $image->image_path;
             });
             unset($room->images);
             return $room;

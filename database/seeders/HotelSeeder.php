@@ -30,7 +30,7 @@ class HotelSeeder extends Seeder
             ->each(function ($hotel) use ($users) {
                 // إضافة صورة للفندق
                 $hotel->images()->create([
-                    'image_path' => 'images/image1.jpg'
+                    'image_path' => 'https://c1.wallpaperflare.com/preview/1002/272/31/architecture-building.jpg'
                 ]);
 
                 // تقييمات
@@ -47,7 +47,7 @@ class HotelSeeder extends Seeder
                 foreach ($rooms as $room) {
                     // صورة لكل غرفة
                     $room->images()->create([
-                        'image_path' => 'images/image2.jpg'
+                        'image_path' => 'https://c4.wallpaperflare.com/wallpaper/74/457/102/life-room-interior-home-wallpaper-preview.jpg'
                     ]);
 
                     // توفّر للغرفة
