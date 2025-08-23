@@ -19,6 +19,11 @@ class HotelController extends Controller
     {
         return $this->hotelsService->getAvailableRooms($hotelId);
     }
+
+    public function getRooms()
+    {
+        return $this->hotelsService->getAvailableRooms();
+    }
     // عرض تفاصيل الغرفة
     public function getRoomDetails($roomId)
     {

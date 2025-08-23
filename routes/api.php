@@ -151,6 +151,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/hotel/review', [HotelReviewController::class, 'store'])->middleware('auth:sanctum');
 Route::get('/hotel/review/{roomId}', [HotelReviewController::class, 'getReviewsForHotel']);
 Route::get('/hotel/rooms/{hotel_id}', [HotelController::class, 'getRoomsForHotel']);
+Route::get('/hotel/rooms', [HotelController::class, 'getRooms']);
 Route::get('/room/details/{room_id}', [HotelController::class, 'getRoomDetails']);
 
 Route::get('/hotels',[HotelController::class, 'getHotels']);

@@ -14,9 +14,10 @@ class ApiResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return ["title"=>$this->title,
-                "description"=>$this->description,
-                "image"=>asset('storage')."/".$this->image
-    ];
+        return [
+            "title" => $this->title,
+            "description" => $this->description,
+            "image" =>  $this->image
+        ];
     }
 }

@@ -13,14 +13,18 @@ use Illuminate\Support\Facades\Auth;
 
 class HotelsService
 {
-    public function getAvailableRooms($hotelId)
+    public function getAvailableRooms($hotelId=null)
     {
         $today = Carbon::today();
 
         //  Get available rooms of the given hotel
-        $slots = RoomAvailability::whereHas('room', function ($query) use ($hotelId) {
-            $query->where('hotel_id', $hotelId);
-        })
+        $query = RoomAvailability::query();
+        if ($hotelId) {
+            $query->whereHas('room', function ($query) use ($hotelId) {
+                $query->where('hotel_id', $hotelId);
+            });
+        }
+        $slots = $query
             ->whereDate('available_from', '<=', $today)
             ->whereDate('available_to', '>=', $today)
             ->with('room')
