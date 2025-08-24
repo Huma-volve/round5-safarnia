@@ -21,7 +21,7 @@ class TourResource extends JsonResource
             'location' => $this->location,
             'description' => $this->description,
             'price' => $this->price,
-            'image' => asset('storage/' . $this->image),
+            'image' =>  $this->image,
             'views' => $this->views,
             'is_recommended' => $this->is_recommended,
             'rating' => $this->rating,
