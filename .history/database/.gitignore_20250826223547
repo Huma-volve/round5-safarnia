@@ -1,9 +1,0 @@
-*.sqlite*
-.env
-.env.*
-.env.local
-.history/
-vendor/
-storage/
-bootstrap/cache/
-node_modules/
