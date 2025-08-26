@@ -184,11 +184,3 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/update/flight/{id}', 'update');
     });
 });
-
-// Public: View reviews for a tour
-Route::get('/tours/{tour}/reviews', [TourReviewController::class, 'index']);
-
-// Authenticated: Submit a review
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/tours/reviews', [TourReviewController::class, 'store']);
-});

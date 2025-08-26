@@ -24,9 +24,4 @@ class Tour extends Model
     {
         return $this->hasMany(TourAvailabilitySlot::class);
     }
-
-    public function reviews()
-    {
-        return $this->hasMany(TourReview::class);
-    }
 }
