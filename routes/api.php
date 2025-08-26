@@ -91,6 +91,7 @@ Route::controller(TourController::class)->group(function () {
     Route::get('/most-viewed-tours', 'getMostViewed');
     Route::get('/available-tours', 'getAvailableTours');
     Route::get('/categories-with-tours-count', 'getCategoriesWithCount');
+
 });
 
 /**
