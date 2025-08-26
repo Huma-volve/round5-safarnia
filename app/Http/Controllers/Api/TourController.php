@@ -86,7 +86,27 @@ class TourController extends Controller
         // Increment views
         $tour->increment('views');
         
-        return new TourResource($tour->load(['category', 'availabilitySlots']));
+        // Load comprehensive tour data
+        $tour->load([
+            'category',
+            'availabilitySlots' => function($query) {
+                $query->orderBy('start_time', 'asc');
+            },
+            'images',
+            'bookings' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'topActivities',
+            'popularActivities',
+            'recommendedActivities',
+            'relatedActivities'
+        ]);
+        
+        return response()->json([
+            'status' => true,
+            'message' => 'Tour details retrieved successfully',
+            'data' => new TourResource($tour)
+        ]);
     }
 
     /**
