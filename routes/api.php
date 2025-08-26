@@ -104,7 +104,7 @@ Route::controller(ActivityController::class)->group(function () {
     Route::get('/recommended-activities', 'getRecommended');
     Route::get('/activities-by-location/{location}', 'getByLocation');
     Route::get('/activities-by-category/{category}', 'getByCategory');
-    Route::get('/activity-categories', 'getCategories');
+    Route::get('/activity-categories', 'getCategories'); 
 });
 
 /**

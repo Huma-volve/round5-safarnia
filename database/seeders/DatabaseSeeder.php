@@ -37,11 +37,14 @@ class DatabaseSeeder extends Seeder
             // 4. Tour bookings
             TourBookingSeeder::class,
 
-            // 5. Profile data
+            // 5. Activities
+            ActivitySeeder::class,
+
+            // 6. Profile data
             ProfileSeeder::class,
             HotelSeeder::class,
 
-            // 6. Other services
+            // 7. Other services
             // HotelSeeder::class,
             FlightSeeder::class,
             CarSeeder::class,

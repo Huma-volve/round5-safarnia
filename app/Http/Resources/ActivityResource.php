@@ -26,7 +26,7 @@ class ActivityResource extends JsonResource
             'formatted_price_range' => $this->formatted_price_range,
             'duration_hours' => $this->duration_hours,
             'category' => $this->category,
-            'image' => $this->image ? asset('storage/' . $this->image) : null,
+            'image' => $this->image,
             'highlights' => $this->highlights ?? [],
             'included_services' => $this->included_services ?? [],
             'excluded_services' => $this->excluded_services ?? [],

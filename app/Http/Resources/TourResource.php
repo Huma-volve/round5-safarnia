@@ -20,7 +20,7 @@ class TourResource extends JsonResource
             'location' => $this->location,
             'description' => $this->description,
             'price' => $this->price,
-            'image' => $this->image ? asset('storage/' . $this->image) : null,
+            'image' => $this->image,
             'views' => $this->views,
             'is_recommended' => $this->is_recommended,
             'rating' => $this->rating,
@@ -44,7 +44,7 @@ class TourResource extends JsonResource
                     'id' => $this->category->id,
                     'title' => $this->category->title,
                     'description' => $this->category->description,
-                    'image' => $this->category->image ? asset('storage/' . $this->category->image) : null,
+                    'image' => $this->category->image,
                 ];
             }),
             
