@@ -26,4 +26,9 @@ class Car extends Model
     {
         return $this->hasMany(AvailabilitySlot::class);
     }
+
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'payable');
+    }
 }
