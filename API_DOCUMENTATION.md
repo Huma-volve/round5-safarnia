@@ -95,7 +95,73 @@ GET /tours
 ```
 GET /tours/{tour}
 ```
-Returns detailed tour information with availability slots.
+Returns comprehensive tour information including:
+
+**Basic Information:**
+- Tour ID, title, location, description
+- Price, rating, views, recommendation status
+- Duration, group size, minimum age, difficulty level
+- Highlights, included/excluded services, what to bring
+- Cancellation policy
+
+**Category Information:**
+- Category ID, title, description, image
+
+**Availability Slots:**
+- All time slots with availability status
+- Start/end times, available seats, max capacity
+- Duration and booking information
+
+**Images:**
+- Tour image gallery
+
+**Statistics:**
+- Total slots, available slots count
+- Total capacity and available seats
+- Booking statistics and recent bookings
+
+**Response Example:**
+```json
+{
+    "status": true,
+    "message": "Tour details retrieved successfully",
+    "data": {
+        "id": 1,
+        "title": "Pyramids of Giza & Sphinx",
+        "location": "Giza, Egypt",
+        "description": "Explore the ancient wonders of Egypt...",
+        "price": "450.00",
+        "image": "http://example.com/storage/pyramids.jpg",
+        "rating": 4.8,
+        "views": 2501,
+        "duration_hours": 8,
+        "max_group_size": 25,
+        "min_age": 12,
+        "difficulty_level": "moderate",
+        "highlights": ["Pyramids", "Sphinx", "Valley Temple"],
+        "included_services": ["Transport", "Guide", "Lunch"],
+        "excluded_services": ["Tips", "Personal expenses"],
+        "what_to_bring": ["Comfortable shoes", "Water", "Camera"],
+        "cancellation_policy": "Free cancellation up to 24 hours before",
+        "category": {
+            "id": 1,
+            "title": "Historical Tours",
+            "description": "Explore ancient civilizations...",
+            "image": "http://example.com/storage/historical.jpg"
+        },
+        "availability_slots": [...],
+        "images": [...],
+        "total_slots": 15,
+        "available_slots_count": 8,
+        "total_capacity": 375,
+        "total_available_seats": 120,
+        "has_available_slots": true,
+        "next_available_slot": {...},
+        "total_bookings": 45,
+        "recent_bookings": [...]
+    }
+}
+```
 
 #### Get Tours by Category
 ```
@@ -306,6 +372,121 @@ POST /login
 #### Logout
 ```
 POST /logout
+```
+
+### 6. Activities
+
+#### Get All Activities
+```
+GET /activities
+```
+**Query Parameters:**
+- `search`: Search by name, description, or location
+- `location`: Filter by location
+- `category`: Filter by category
+- `difficulty_level`: Filter by difficulty (easy, moderate, challenging, expert)
+- `min_price`: Minimum price
+- `max_price`: Maximum price
+- `min_rating`: Minimum rating
+- `sort_by`: Sort by (price, rating, views, name)
+- `sort_order`: Sort order (asc, desc)
+- `per_page`: Results per page (default: 15)
+
+#### Get Activity Details
+```
+GET /activities/{activity}
+```
+Returns detailed activity information.
+
+#### Get Top Rated Activities
+```
+GET /top-rated-activities
+```
+Returns activities with rating >= 4.0.
+
+#### Get Popular Activities
+```
+GET /popular-activities
+```
+Returns popular activities.
+
+#### Get Recommended Activities
+```
+GET /recommended-activities
+```
+Returns recommended activities.
+
+#### Get Activities by Location
+```
+GET /activities-by-location/{location}
+```
+Returns activities in a specific location.
+
+#### Get Activities by Category
+```
+GET /activities-by-category/{category}
+```
+Returns activities in a specific category.
+
+#### Get Activity Categories
+```
+GET /activity-categories
+```
+Returns all available activity categories.
+
+### 7. Tour Details with Related Activities
+
+The tour details endpoint now includes related activities:
+
+#### Get Tour Details with Activities
+```
+GET /tours/{tour}
+```
+
+**Response now includes:**
+- `top_activities`: Top rated activities in the same location
+- `popular_activities`: Popular activities in the same location  
+- `recommended_activities`: Recommended activities in the same location
+- `related_activities_count`: Total count of related activities
+
+**Example Response:**
+```json
+{
+    "status": true,
+    "message": "Tour details retrieved successfully",
+    "data": {
+        "id": 1,
+        "title": "Pyramids of Giza & Sphinx",
+        "location": "Giza, Egypt",
+        // ... other tour details ...
+        
+        "top_activities": [
+            {
+                "id": 1,
+                "name": "Camel Ride at Pyramids",
+                "description": "Experience the ancient pyramids from a camel's back...",
+                "location": "Giza, Egypt",
+                "rating": 4.7,
+                "price_range": {"min": 25, "max": 50},
+                "formatted_price_range": "$25.00 - $50.00",
+                "duration_hours": 2,
+                "category": "Adventure",
+                "difficulty_level": "easy",
+                "difficulty_level_arabic": "سهل",
+                "highlights": ["Camel ride", "Pyramid views", "Photo opportunities"],
+                "included_services": ["Camel ride", "Local guide", "Photos", "Water"],
+                "excluded_services": ["Tips", "Personal expenses"],
+                "what_to_bring": ["Comfortable clothes", "Sunscreen", "Camera"],
+                "best_time_to_visit": "Early morning or sunset",
+                "is_popular": true,
+                "is_recommended": true
+            }
+        ],
+        "popular_activities": [...],
+        "recommended_activities": [...],
+        "related_activities_count": 3
+    }
+}
 ```
 
 ## Response Format
