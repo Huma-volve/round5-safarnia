@@ -45,6 +45,24 @@ class TourController extends Controller
             $query->where('rating', '>=', $request->min_rating);
         }
 
+        // Filter by duration
+        if ($request->has('min_duration') && $request->min_duration) {
+            $query->where('duration_hours', '>=', $request->min_duration);
+        }
+        if ($request->has('max_duration') && $request->max_duration) {
+            $query->where('duration_hours', '<=', $request->max_duration);
+        }
+
+        // Filter by highlights
+        if ($request->has('highlights') && $request->highlights) {
+            $highlights = explode(',', $request->highlights);
+            $query->where(function($q) use ($highlights) {
+                foreach ($highlights as $highlight) {
+                    $q->whereJsonContains('highlights', trim($highlight));
+                }
+            });
+        }
+
         // Filter by location (near me - simplified version)
         if ($request->has('location') && $request->location) {
             $query->where('location', 'like', '%' . $request->location . '%');
@@ -67,6 +85,9 @@ class TourController extends Controller
             case 'title':
                 $query->orderBy('title', $sortOrder);
                 break;
+            case 'duration':
+                $query->orderBy('duration_hours', $sortOrder);
+                break;
             default:
                 $query->orderBy('created_at', $sortOrder);
         }
@@ -75,7 +96,55 @@ class TourController extends Controller
         $perPage = $request->get('per_page', 15);
         $tours = $query->paginate($perPage);
 
-        return TourResource::collection($tours);
+        // Get additional stats for the filtered results
+        $filteredStats = [
+            'total_tours' => $tours->total(),
+            'avg_price' => $tours->avg('price'),
+            'avg_rating' => $tours->avg('rating'),
+            'avg_duration' => $tours->avg('duration_hours'),
+            'price_range' => [
+                'min' => $tours->min('price'),
+                'max' => $tours->max('price')
+            ],
+            'duration_range' => [
+                'min' => $tours->min('duration_hours'),
+                'max' => $tours->max('duration_hours')
+            ],
+            'rating_distribution' => [
+                '5_star' => $tours->where('rating', '>=', 5.0)->count(),
+                '4_star' => $tours->where('rating', '>=', 4.0)->where('rating', '<', 5.0)->count(),
+                '3_star' => $tours->where('rating', '>=', 3.0)->where('rating', '<', 4.0)->count(),
+                'below_3' => $tours->where('rating', '<', 3.0)->count()
+            ]
+        ];
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Tours retrieved successfully',
+            'data' => TourResource::collection($tours),
+            'pagination' => [
+                'current_page' => $tours->currentPage(),
+                'last_page' => $tours->lastPage(),
+                'per_page' => $tours->perPage(),
+                'total' => $tours->total(),
+                'from' => $tours->firstItem(),
+                'to' => $tours->lastItem()
+            ],
+            'filters_applied' => [
+                'search' => $request->search,
+                'category_id' => $request->category_id,
+                'min_price' => $request->min_price,
+                'max_price' => $request->max_price,
+                'min_rating' => $request->min_rating,
+                'min_duration' => $request->min_duration,
+                'max_duration' => $request->max_duration,
+                'highlights' => $request->highlights,
+                'location' => $request->location,
+                'sort_by' => $sortBy,
+                'sort_order' => $sortOrder
+            ],
+            'stats' => $filteredStats
+        ]);
     }
 
     /**
@@ -86,16 +155,79 @@ class TourController extends Controller
         // Increment views
         $tour->increment('views');
         
-        return new TourResource($tour->load(['category', 'availabilitySlots']));
+        // Load comprehensive tour data
+        $tour->load([
+            'category',
+            'availabilitySlots' => function($query) {
+                $query->orderBy('start_time', 'asc');
+            },
+            'images',
+            'bookings' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'topActivities',
+            'popularActivities',
+            'recommendedActivities',
+            'relatedActivities'
+        ]);
+        
+        // Get additional tour statistics
+        $tourStats = [
+            'total_bookings' => $tour->bookings->count(),
+            'total_revenue' => $tour->bookings->sum('total_price'),
+            'avg_booking_size' => $tour->bookings->avg('seats_count'),
+            'popularity_score' => ($tour->rating * 0.4) + ($tour->views * 0.3) + ($tour->bookings->count() * 0.3),
+            'availability_score' => $tour->has_available_slots ? 100 : 0,
+            'next_available_date' => $tour->next_available_slot ? $tour->next_available_slot->start_time->format('Y-m-d') : null
+        ];
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Tour details retrieved successfully',
+            'data' => new TourResource($tour),
+            'tour_stats' => $tourStats,
+            'related_info' => [
+                'similar_tours_in_location' => Tour::where('location', $tour->location)
+                    ->where('id', '!=', $tour->id)
+                    ->where('category_id', $tour->category_id)
+                    ->take(3)
+                    ->get(['id', 'title', 'price', 'rating', 'image']),
+                'popular_highlights_in_category' => Tour::where('category_id', $tour->category_id)
+                    ->whereNotNull('highlights')
+                    ->pluck('highlights')
+                    ->flatten()
+                    ->countBy()
+                    ->sortDesc()
+                    ->take(5)
+                    ->toArray()
+            ]
+        ]);
     }
 
     /**
      * Get tours by category
      */
-    public function getByCategory(Category $category)
+    public function getByCategory(Category $category) 
     {
-        $tours = $category->tours()->with(['availabilitySlots'])->get();
-        return TourResource::collection($tours);
+        $tours = $category->tours()->with([
+            'availabilitySlots' => function($query) {
+                $query->orderBy('start_time', 'asc');
+            },
+            'images'
+        ])->get();
+        
+        return response()->json([
+            'status' => true,
+            'message' => 'Tours for category: ' . $category->title,
+            'data' => TourResource::collection($tours),
+            'category_info' => [
+                'id' => $category->id,
+                'title' => $category->title,
+                'description' => $category->description,
+                'image' => asset('storage/' . $category->image),
+                'tours_count' => $tours->count()
+            ]
+        ]);
     }
 
     /**
@@ -104,11 +236,29 @@ class TourController extends Controller
     public function getTopRated()
     {
         $tours = Tour::where('rating', '>=', 4.0)
+                     ->with([
+                         'category',
+                         'availabilitySlots' => function($query) {
+                             $query->where('available_seats', '>', 0)
+                                   ->orderBy('start_time', 'asc');
+                         },
+                         'images'
+                     ])
                      ->orderBy('rating', 'desc')
                      ->take(10)
                      ->get();
         
-        return TourResource::collection($tours);
+        return response()->json([
+            'status' => true,
+            'message' => 'Top rated tours retrieved successfully',
+            'data' => TourResource::collection($tours),
+            'stats' => [
+                'total_tours' => $tours->count(),
+                'avg_rating' => $tours->avg('rating'),
+                'min_rating' => $tours->min('rating'),
+                'max_rating' => $tours->max('rating')
+            ]
+        ]);
     }
 
     /**
@@ -116,11 +266,29 @@ class TourController extends Controller
      */
     public function getMostViewed()
     {
-        $tours = Tour::orderBy('views', 'desc')
-                     ->take(10)
-                     ->get();
+        $tours = Tour::with([
+            'category',
+            'availabilitySlots' => function($query) {
+                $query->where('available_seats', '>', 0)
+                      ->orderBy('start_time', 'asc');
+            },
+            'images'
+        ])
+        ->orderBy('views', 'desc')
+        ->take(10)
+        ->get();
         
-        return TourResource::collection($tours);
+        return response()->json([
+            'status' => true,
+            'message' => 'Most viewed tours retrieved successfully',
+            'data' => TourResource::collection($tours),
+            'stats' => [
+                'total_tours' => $tours->count(),
+                'total_views' => $tours->sum('views'),
+                'avg_views' => $tours->avg('views'),
+                'max_views' => $tours->max('views')
+            ]
+        ]);
     }
 
     /**
@@ -130,9 +298,26 @@ class TourController extends Controller
     {
         $tours = Tour::whereHas('availabilitySlots', function($query) {
             $query->where('available_seats', '>', 0);
-        })->with(['availabilitySlots'])->get();
+        })->with([
+            'category',
+            'availabilitySlots' => function($query) {
+                $query->where('available_seats', '>', 0)
+                      ->orderBy('start_time', 'asc');
+            },
+            'images'
+        ])->get();
         
-        return TourResource::collection($tours);
+        return response()->json([
+            'status' => true,
+            'message' => 'Available tours retrieved successfully',
+            'data' => TourResource::collection($tours),
+            'availability_stats' => [
+                'total_tours' => $tours->count(),
+                'total_available_slots' => $tours->sum('available_slots_count'),
+                'total_available_seats' => $tours->sum('total_available_seats'),
+                'tours_with_immediate_availability' => $tours->where('has_available_slots', true)->count()
+            ]
+        ]);
     }
 
     /**

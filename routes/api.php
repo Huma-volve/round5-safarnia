@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\RoomBookingController;
 use App\Http\Controllers\RecommendedTourController;
 use App\Http\Controllers\Api\FlightBookingController;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use App\Http\Controllers\Api\ActivityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,6 +92,21 @@ Route::controller(TourController::class)->group(function () {
     Route::get('/most-viewed-tours', 'getMostViewed');
     Route::get('/available-tours', 'getAvailableTours');
     Route::get('/categories-with-tours-count', 'getCategoriesWithCount');
+
+});
+
+/**
+ * Activities
+ */
+Route::controller(ActivityController::class)->group(function () {
+    Route::get('/activities', 'index');
+    Route::get('/activities/{activity}', 'show');
+    Route::get('/top-rated-activities', 'getTopRated');
+    Route::get('/popular-activities', 'getPopular');
+    Route::get('/recommended-activities', 'getRecommended');
+    Route::get('/activities-by-location/{location}', 'getByLocation');
+    Route::get('/activities-by-category/{category}', 'getByCategory');
+    Route::get('/activity-categories', 'getCategories'); 
 });
 
 /**
