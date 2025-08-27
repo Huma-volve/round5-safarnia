@@ -12,13 +12,14 @@ class ProfileSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Osama Al-Jaridi',
-            'email' => 'osama@example.com',
-            'phone' => '01012345678',
-            'image' => 'profile/osama.jpg', // صورة المستخدم
-                        
-            'password' => bcrypt('12345678')
-        ]);
+        User::firstOrCreate(
+            ['email' => 'osama@example.com'],
+            [
+                'name' => 'Osama Al-Jaridi',
+                'phone' => '01012345678',
+                'image' => 'profile/osama.jpg', // صورة المستخدم
+                'password' => bcrypt('12345678')
+            ]
+        );
     }
 }
