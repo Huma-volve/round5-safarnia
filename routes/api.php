@@ -8,6 +8,8 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Api\TourReviewController;
+use App\Models\Tour;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\HotelController;
@@ -21,6 +23,7 @@ use App\Http\Controllers\RecommendedTourController;
 use App\Http\Controllers\Api\FlightBookingController;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Http\Controllers\Api\ActivityController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -106,7 +109,7 @@ Route::controller(ActivityController::class)->group(function () {
     Route::get('/recommended-activities', 'getRecommended');
     Route::get('/activities-by-location/{location}', 'getByLocation');
     Route::get('/activities-by-category/{category}', 'getByCategory');
-    Route::get('/activity-categories', 'getCategories'); 
+    Route::get('/activity-categories', 'getCategories');
 });
 
 /**
@@ -200,6 +203,16 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+
+// Public: View reviews for a tour
+Route::get('/tours/{tour}/reviews', [TourReviewController::class, 'index']);
+
+// Authenticated: Submit a review
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/tours/reviews', [TourReviewController::class, 'store']);
+});
+
+
 /**
  * Payment
  */
@@ -207,4 +220,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'checkout']);
     Route::post('/checkout/confirm', [CheckoutController::class, 'confirmWithSavedPM']);
+
 });
