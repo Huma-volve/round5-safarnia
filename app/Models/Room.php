@@ -43,4 +43,9 @@ class Room extends Model
     {
         return 'rooms';
     }
+
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'payable');
+    }
 }

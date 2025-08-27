@@ -3,22 +3,23 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\RecommendedTourController;
-use App\Http\Controllers\TourAvailSlotController;
-use App\Http\Controllers\TourBookingController;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\FlightController;
-use App\Http\Controllers\Api\HotelController;
-use App\Http\Controllers\Api\HotelReviewController;
-use App\Http\Controllers\Api\RoomBookingController;
-use App\Http\Controllers\Api\FlightBookingController;
-use App\Http\Controllers\Api\TourController;
+
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\TourController;
+use App\Http\Controllers\Api\HotelController;
+use App\Http\Controllers\Api\FlightController;
+use App\Http\Controllers\TourBookingController;
+use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\TourAvailSlotController;
+use App\Http\Controllers\Api\HotelReviewController;
+use App\Http\Controllers\Api\RoomBookingController;
+use App\Http\Controllers\RecommendedTourController;
+use App\Http\Controllers\Api\FlightBookingController;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Http\Controllers\Api\ActivityController;
 
 /*
@@ -170,9 +171,9 @@ Route::get('/hotel/rooms/{hotel_id}', [HotelController::class, 'getRoomsForHotel
 Route::get('/hotel/rooms', [HotelController::class, 'getRooms']);
 Route::get('/room/details/{room_id}', [HotelController::class, 'getRoomDetails']);
 
-Route::get('/hotels',[HotelController::class, 'getHotels']);
-Route::get('/hotels/search',[HotelController::class, 'searchHotels']);
-Route::get('/rooms/search',[HotelController::class,'searchRooms']);
+Route::get('/hotels', [HotelController::class, 'getHotels']);
+Route::get('/hotels/search', [HotelController::class, 'searchHotels']);
+Route::get('/rooms/search', [HotelController::class, 'searchRooms']);
 Route::controller(RoomBookingController::class)
     ->middleware('auth:sanctum')
     ->group(function () {
@@ -197,4 +198,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/cancel/flight/{id}', 'destroy');
         Route::post('/update/flight/{id}', 'update');
     });
+});
+
+/**
+ * Payment
+ */
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/checkout', [CheckoutController::class, 'checkout']);
+    Route::post('/checkout/confirm', [CheckoutController::class, 'confirmWithSavedPM']);
 });
