@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Tour extends Model
 {
     protected $fillable = [
-        'category_id', 
-        'title', 
-        'location', 
-        'rating', 
-        'description', 
-        'price', 
-        'image', 
-        'views', 
+        'category_id',
+        'title',
+        'location',
+        'rating',
+        'description',
+        'price',
+        'image',
+        'views',
         'is_recommended',
         'duration_hours',
         'max_group_size',
@@ -51,11 +51,10 @@ class Tour extends Model
         return $this->hasMany(TourAvailabilitySlot::class);
     }
 
-<<<<<<< HEAD
     public function payments()
     {
         return $this->morphMany(Payment::class, 'payable');
-=======
+    }
     public function bookings()
     {
         return $this->hasManyThrough(TourBooking::class, TourAvailabilitySlot::class, 'tour_id', 'tour_slot_id', 'id', 'id');
@@ -152,6 +151,5 @@ class Tour extends Model
         return $this->hasMany(Activity::class, 'location', 'location')
                     ->where('is_recommended', true)
                     ->orderBy('rating', 'desc');
->>>>>>> 2ae85b9ef328120d27c2fbfdf23634a3b1a5a0b7
     }
 }

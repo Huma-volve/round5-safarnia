@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TourResource;
 use App\Models\Tour;
@@ -20,10 +21,10 @@ class TourController extends Controller
 
         // Search by keyword
         if ($request->has('search') && $request->search) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%')
-                  ->orWhere('location', 'like', '%' . $request->search . '%');
+                    ->orWhere('description', 'like', '%' . $request->search . '%')
+                    ->orWhere('location', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -56,7 +57,7 @@ class TourController extends Controller
         // Filter by highlights
         if ($request->has('highlights') && $request->highlights) {
             $highlights = explode(',', $request->highlights);
-            $query->where(function($q) use ($highlights) {
+            $query->where(function ($q) use ($highlights) {
                 foreach ($highlights as $highlight) {
                     $q->whereJsonContains('highlights', trim($highlight));
                 }
@@ -71,7 +72,7 @@ class TourController extends Controller
         // Sort options
         $sortBy = $request->get('sort_by', 'created_at');
         $sortOrder = $request->get('sort_order', 'desc');
-        
+
         switch ($sortBy) {
             case 'price':
                 $query->orderBy('price', $sortOrder);
@@ -95,127 +96,57 @@ class TourController extends Controller
         // Pagination
         $perPage = $request->get('per_page', 15);
         $tours = $query->paginate($perPage);
-
-        // Get additional stats for the filtered results
-        $filteredStats = [
-            'total_tours' => $tours->total(),
-            'avg_price' => $tours->avg('price'),
-            'avg_rating' => $tours->avg('rating'),
-            'avg_duration' => $tours->avg('duration_hours'),
-            'price_range' => [
-                'min' => $tours->min('price'),
-                'max' => $tours->max('price')
-            ],
-            'duration_range' => [
-                'min' => $tours->min('duration_hours'),
-                'max' => $tours->max('duration_hours')
-            ],
-            'rating_distribution' => [
-                '5_star' => $tours->where('rating', '>=', 5.0)->count(),
-                '4_star' => $tours->where('rating', '>=', 4.0)->where('rating', '<', 5.0)->count(),
-                '3_star' => $tours->where('rating', '>=', 3.0)->where('rating', '<', 4.0)->count(),
-                'below_3' => $tours->where('rating', '<', 3.0)->count()
-            ]
-        ];
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Tours retrieved successfully',
-            'data' => TourResource::collection($tours),
-            'pagination' => [
-                'current_page' => $tours->currentPage(),
-                'last_page' => $tours->lastPage(),
-                'per_page' => $tours->perPage(),
-                'total' => $tours->total(),
-                'from' => $tours->firstItem(),
-                'to' => $tours->lastItem()
-            ],
-            'filters_applied' => [
-                'search' => $request->search,
-                'category_id' => $request->category_id,
-                'min_price' => $request->min_price,
-                'max_price' => $request->max_price,
-                'min_rating' => $request->min_rating,
-                'min_duration' => $request->min_duration,
-                'max_duration' => $request->max_duration,
-                'highlights' => $request->highlights,
-                'location' => $request->location,
-                'sort_by' => $sortBy,
-                'sort_order' => $sortOrder
-            ],
-            'stats' => $filteredStats
-        ]);
+        // أضف is_favorite
+        $tours->getCollection()->transform(function ($tour) {
+            $tour->is_favorite = DB::table('favorites')
+                ->where('tour_id', $tour->id)
+                ->exists();
+            return $tour;
+        });
+        return TourResource::collection($tours);
     }
 
     /**
      * Display the specified tour
      */
-    public function show(Tour $tour)
+    public function show($id)
     {
-        // Increment views
-        $tour->increment('views');
-        
-        // Load comprehensive tour data
-        $tour->load([
-            'category',
-            'availabilitySlots' => function($query) {
-                $query->orderBy('start_time', 'asc');
-            },
-            'images',
-            'bookings' => function($query) {
-                $query->orderBy('created_at', 'desc');
-            },
-            'topActivities',
-            'popularActivities',
-            'recommendedActivities',
-            'relatedActivities'
-        ]);
-        
-        // Get additional tour statistics
-        $tourStats = [
-            'total_bookings' => $tour->bookings->count(),
-            'total_revenue' => $tour->bookings->sum('total_price'),
-            'avg_booking_size' => $tour->bookings->avg('seats_count'),
-            'popularity_score' => ($tour->rating * 0.4) + ($tour->views * 0.3) + ($tour->bookings->count() * 0.3),
-            'availability_score' => $tour->has_available_slots ? 100 : 0,
-            'next_available_date' => $tour->next_available_slot ? $tour->next_available_slot->start_time->format('Y-m-d') : null
-        ];
+        $tour = Tour::with(['category', 'availabilitySlots'])->find($id);
+        if (!$tour) {
+            return ApiResponse::sendResponse(404, 'Tour not found');
+        }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Tour details retrieved successfully',
-            'data' => new TourResource($tour),
-            'tour_stats' => $tourStats,
-            'related_info' => [
-                'similar_tours_in_location' => Tour::where('location', $tour->location)
-                    ->where('id', '!=', $tour->id)
-                    ->where('category_id', $tour->category_id)
-                    ->take(3)
-                    ->get(['id', 'title', 'price', 'rating', 'image']),
-                'popular_highlights_in_category' => Tour::where('category_id', $tour->category_id)
-                    ->whereNotNull('highlights')
-                    ->pluck('highlights')
-                    ->flatten()
-                    ->countBy()
-                    ->sortDesc()
-                    ->take(5)
-                    ->toArray()
-            ]
-        ]);
+        $data = [
+            'id' => $tour->id,
+            'title' => $tour->title,
+            'location' => $tour->location,
+            'description' => $tour->description,
+            'price' => $tour->price,
+            'image' => $tour->image,
+            'slots' => $tour->availabilitySlots->map(function ($slot) {
+                return [
+                    'slot_id' => $slot->id,
+                    'max_seats' => $slot->max_seats,
+                ];
+            }),
+            'duration' => $tour->duration_hours,
+            'highlights' => $tour->highlights,
+        ];
+        return ApiResponse::sendResponse(200, 'Tour details retrieved successfully',$data);
     }
 
     /**
      * Get tours by category
      */
-    public function getByCategory(Category $category) 
+    public function getByCategory(Category $category)
     {
         $tours = $category->tours()->with([
-            'availabilitySlots' => function($query) {
+            'availabilitySlots' => function ($query) {
                 $query->orderBy('start_time', 'asc');
             },
             'images'
         ])->get();
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Tours for category: ' . $category->title,
@@ -236,18 +167,18 @@ class TourController extends Controller
     public function getTopRated()
     {
         $tours = Tour::where('rating', '>=', 4.0)
-                     ->with([
-                         'category',
-                         'availabilitySlots' => function($query) {
-                             $query->where('available_seats', '>', 0)
-                                   ->orderBy('start_time', 'asc');
-                         },
-                         'images'
-                     ])
-                     ->orderBy('rating', 'desc')
-                     ->take(10)
-                     ->get();
-        
+            ->with([
+                'category',
+                'availabilitySlots' => function ($query) {
+                    $query->where('available_seats', '>', 0)
+                        ->orderBy('start_time', 'asc');
+                },
+                'images'
+            ])
+            ->orderBy('rating', 'desc')
+            ->take(10)
+            ->get();
+
         return response()->json([
             'status' => true,
             'message' => 'Top rated tours retrieved successfully',
@@ -258,7 +189,12 @@ class TourController extends Controller
                 'min_rating' => $tours->min('rating'),
                 'max_rating' => $tours->max('rating')
             ]
-        ]);
+        ])
+            ->orderBy('rating', 'desc')
+            ->take(10)
+            ->get();
+
+        return TourResource::collection($tours);
     }
 
     /**
@@ -268,16 +204,16 @@ class TourController extends Controller
     {
         $tours = Tour::with([
             'category',
-            'availabilitySlots' => function($query) {
+            'availabilitySlots' => function ($query) {
                 $query->where('available_seats', '>', 0)
-                      ->orderBy('start_time', 'asc');
+                    ->orderBy('start_time', 'asc');
             },
             'images'
         ])
-        ->orderBy('views', 'desc')
-        ->take(10)
-        ->get();
-        
+            ->orderBy('views', 'desc')
+            ->take(10)
+            ->get();
+
         return response()->json([
             'status' => true,
             'message' => 'Most viewed tours retrieved successfully',
@@ -289,6 +225,11 @@ class TourController extends Controller
                 'max_views' => $tours->max('views')
             ]
         ]);
+        $tours = Tour::orderBy('views', 'desc')
+            ->take(10)
+            ->get();
+
+        return TourResource::collection($tours);
     }
 
     /**
@@ -296,17 +237,17 @@ class TourController extends Controller
      */
     public function getAvailableTours()
     {
-        $tours = Tour::whereHas('availabilitySlots', function($query) {
+        $tours = Tour::whereHas('availabilitySlots', function ($query) {
             $query->where('available_seats', '>', 0);
         })->with([
             'category',
-            'availabilitySlots' => function($query) {
+            'availabilitySlots' => function ($query) {
                 $query->where('available_seats', '>', 0)
-                      ->orderBy('start_time', 'asc');
+                    ->orderBy('start_time', 'asc');
             },
             'images'
         ])->get();
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Available tours retrieved successfully',
@@ -317,7 +258,9 @@ class TourController extends Controller
                 'total_available_seats' => $tours->sum('total_available_seats'),
                 'tours_with_immediate_availability' => $tours->where('has_available_slots', true)->count()
             ]
-        ]);
+        ])->with(['availabilitySlots'])->get();
+
+        return TourResource::collection($tours);
     }
 
     /**
@@ -326,10 +269,10 @@ class TourController extends Controller
     public function getCategoriesWithCount()
     {
         $categories = Category::withCount('tours')->get();
-        
+
         return response()->json([
             'status' => true,
-            'data' => $categories->map(function($category) {
+            'data' => $categories->map(function ($category) {
                 return [
                     'id' => $category->id,
                     'title' => $category->title,

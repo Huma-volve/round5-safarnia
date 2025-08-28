@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Process\Process;
 use App\Http\Controllers\ApiController;
-
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
@@ -21,6 +21,7 @@ use App\Http\Controllers\RecommendedTourController;
 use App\Http\Controllers\Api\FlightBookingController;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,7 +107,7 @@ Route::controller(ActivityController::class)->group(function () {
     Route::get('/recommended-activities', 'getRecommended');
     Route::get('/activities-by-location/{location}', 'getByLocation');
     Route::get('/activities-by-category/{category}', 'getByCategory');
-    Route::get('/activity-categories', 'getCategories'); 
+    Route::get('/activity-categories', 'getCategories');
 });
 
 /**
@@ -198,6 +199,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/cancel/flight/{id}', 'destroy');
         Route::post('/update/flight/{id}', 'update');
     });
+
+
+    Route::post('/favorites/add/{tourId}', [FavoriteController::class, 'addToFavorite'])
+        ->middleware('auth:sanctum');
+
+    Route::delete('/favorites/remove/{tourId}', [FavoriteController::class, 'removeFromFavorite'])
+        ->middleware('auth:sanctum');
 });
 
 /**
@@ -208,3 +216,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'checkout']);
     Route::post('/checkout/confirm', [CheckoutController::class, 'confirmWithSavedPM']);
 });
+
+
+
+// locations
+Route::get('/locations', [LocationController::class, 'index']);
