@@ -24,7 +24,7 @@ class TourSeeder extends Seeder
                 'description' => 'Explore the ancient wonders of Egypt including the Great Pyramid, Sphinx, and Valley Temple. Learn about the fascinating history of the Old Kingdom.',
                 'price' => 450.00,
                 'rating' => 4.8,
-                'image' => 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&h=600&fit=crop',
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/756/599/630/man-made-udaipur-hotel-hotel-india-wallpaper-preview.jpg',
                 'views' => 2500,
                 'location' => 'Giza, Egypt',
                 'is_recommended' => true,
@@ -44,7 +44,7 @@ class TourSeeder extends Seeder
                 'description' => 'Discover the magnificent temples of Luxor and explore the royal tombs in the Valley of the Kings. Experience the grandeur of ancient Thebes.',
                 'price' => 380.00,
                 'rating' => 4.7,
-                'image' => 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&h=600&fit=crop',
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/219/894/458/5bd329b2b5293-wallpaper-preview.jpg',
                 'views' => 1800,
                 'location' => 'Luxor, Egypt',
                 'is_recommended' => true,
@@ -64,7 +64,7 @@ class TourSeeder extends Seeder
                 'description' => 'Walk through the historic Islamic quarter of Cairo, visit the magnificent Citadel of Saladin, and explore ancient mosques and markets.',
                 'price' => 220.00,
                 'rating' => 4.5,
-                'image' => 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&h=600&fit=crop',
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/373/217/146/man-made-rajasthan-wallpaper-preview.jpg',
                 'views' => 1200,
                 'location' => 'Cairo, Egypt',
                 'is_recommended' => false,
@@ -86,7 +86,7 @@ class TourSeeder extends Seeder
                 'description' => 'Experience the thrill of desert adventure with 4x4 vehicles, camel rides, and overnight camping under the stars in the Sinai Peninsula.',
                 'price' => 320.00,
                 'rating' => 4.6,
-                'image' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/871/418/390/city-cityscape-dubai-united-arab-emirates-wallpaper-preview.jpg',
                 'views' => 950,
                 'location' => 'Sinai Peninsula, Egypt',
                 'is_recommended' => true,
@@ -106,7 +106,7 @@ class TourSeeder extends Seeder
                 'description' => 'Camp in the surreal White Desert with its unique chalk rock formations. Enjoy stargazing and traditional Bedouin hospitality.',
                 'price' => 280.00,
                 'rating' => 4.4,
-                'image' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/159/675/616/man-made-village-house-landscape-wallpaper-thumb.jpg',
                 'views' => 750,
                 'location' => 'Farafra, Egypt',
                 'is_recommended' => false,
@@ -128,7 +128,7 @@ class TourSeeder extends Seeder
                 'description' => 'Immerse yourself in Nubian culture with traditional music, local cuisine, and authentic village life along the Nile River.',
                 'price' => 180.00,
                 'rating' => 4.3,
-                'image' => 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/747/10/416/dubai-united-arab-emirates-evening-burj-khalifa-wallpaper-preview.jpg',
                 'views' => 600,
                 'location' => 'Aswan, Egypt',
                 'is_recommended' => false,
@@ -148,7 +148,7 @@ class TourSeeder extends Seeder
                 'description' => 'Explore the ancient Coptic Christian heritage of Cairo, including the Hanging Church and Coptic Museum.',
                 'price' => 150.00,
                 'rating' => 4.2,
-                'image' => 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&h=600&fit=crop',
+                'image' => 'https://c1.wallpaperflare.com/preview/549/480/26/taj-mahal-palace-hotel-5-star-hotel-mumbai.jpg',
                 'views' => 450,
                 'location' => 'Cairo, Egypt',
                 'is_recommended' => false,
@@ -170,7 +170,7 @@ class TourSeeder extends Seeder
                 'description' => 'Dive into the crystal-clear waters of the Red Sea and discover vibrant coral reefs and marine life.',
                 'price' => 420.00,
                 'rating' => 4.9,
-                'image' => 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop',
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/653/585/146/life-resort-house-architecture-wallpaper-preview.jpg',
                 'views' => 2100,
                 'location' => 'Hurghada, Egypt',
                 'is_recommended' => true,
@@ -190,7 +190,7 @@ class TourSeeder extends Seeder
                 'description' => 'Visit the beautiful Fayoum Oasis, see the stunning Wadi El-Rayan waterfalls, and explore the unique landscape.',
                 'price' => 260.00,
                 'rating' => 4.4,
-                'image' => 'https://images.unsplash.com/photo-1565967511849-76a60a516170?w=800&h=600&fit=crop',
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/1000/327/737/man-made-devil-s-bridge-bridge-germany-wallpaper-thumb.jpg',
                 'views' => 800,
                 'location' => 'Fayoum, Egypt',
                 'is_recommended' => false,
@@ -212,7 +212,7 @@ class TourSeeder extends Seeder
                 'description' => 'Climb Mount Sinai at sunrise and visit the historic St. Catherine Monastery, a UNESCO World Heritage site.',
                 'price' => 350.00,
                 'rating' => 4.7,
-                'image' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+                'image' => 'https://c1.wallpaperflare.com/preview/985/72/873/israel-dome-of-the-rock-jerusalem-temple-mount-thumbnail.jpg',
                 'views' => 1400,
                 'location' => 'Sinai Peninsula, Egypt',
                 'is_recommended' => true,
@@ -247,7 +247,7 @@ class TourSeeder extends Seeder
             ['title' => 'Historical Tours'],
             [
                 'description' => 'Explore ancient civilizations and historical landmarks',
-                'image' => 'historical.jpg'
+                'image' => 'https://c1.wallpaperflare.com/preview/652/179/664/udaipur-palace-lake-rajasthan.jpg'
             ]
         );
 
@@ -256,7 +256,7 @@ class TourSeeder extends Seeder
             ['title' => 'Adventure Tours'],
             [
                 'description' => 'Thrilling outdoor adventures and desert experiences',
-                'image' => 'adventure.jpg'
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/889/969/207/las-vegas-hotel-fountain-cityscape-wallpaper-preview.jpg'
             ]
         );
 
@@ -265,7 +265,7 @@ class TourSeeder extends Seeder
             ['title' => 'Cultural Tours'],
             [
                 'description' => 'Immerse yourself in local culture and traditions',
-                'image' => 'cultural.jpg'
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/373/217/146/man-made-rajasthan-wallpaper-preview.jpg'
             ]
         );
 
@@ -274,7 +274,7 @@ class TourSeeder extends Seeder
             ['title' => 'Nature Tours'],
             [
                 'description' => 'Discover natural wonders and wildlife',
-                'image' => 'nature.jpg'
+                'image' => 'https://c4.wallpaperflare.com/wallpaper/295/606/441/bali-bungalow-cities-hotel-wallpaper-preview.jpg'
             ]
         );
 
@@ -283,7 +283,7 @@ class TourSeeder extends Seeder
             ['title' => 'Religious Tours'],
             [
                 'description' => 'Visit sacred sites and religious landmarks',
-                'image' => 'religious.jpg'
+                'image' => 'https://c1.wallpaperflare.com/preview/216/392/890/israel-dome-of-the-rock-jerusalem-temple-mount.jpg'
             ]
         );
 
