@@ -7,14 +7,14 @@ use App\Models\TourReview;
 class Tour extends Model
 {
     protected $fillable = [
-        'category_id', 
-        'title', 
-        'location', 
-        'rating', 
-        'description', 
-        'price', 
-        'image', 
-        'views', 
+        'category_id',
+        'title',
+        'location',
+        'rating',
+        'description',
+        'price',
+        'image',
+        'views',
         'is_recommended',
         'duration_hours',
         'max_group_size',
