@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\TourReview;
 class Tour extends Model
 {
     protected $fillable = [
@@ -51,10 +51,17 @@ class Tour extends Model
         return $this->hasMany(TourAvailabilitySlot::class);
     }
 
+
+    public function reviews()
+    {
+        return $this->hasMany(TourReview::class);
+
+    }
     public function payments()
     {
         return $this->morphMany(Payment::class, 'payable');
     }
+
     public function bookings()
     {
         return $this->hasManyThrough(TourBooking::class, TourAvailabilitySlot::class, 'tour_id', 'tour_slot_id', 'id', 'id');
@@ -151,5 +158,6 @@ class Tour extends Model
         return $this->hasMany(Activity::class, 'location', 'location')
                     ->where('is_recommended', true)
                     ->orderBy('rating', 'desc');
+
     }
 }

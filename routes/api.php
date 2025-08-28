@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Api\TourReviewController;
+use App\Models\Tour;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\HotelController;
@@ -22,6 +24,7 @@ use App\Http\Controllers\Api\FlightBookingController;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\LocationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -208,6 +211,16 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('auth:sanctum');
 });
 
+
+// Public: View reviews for a tour
+Route::get('/tours/{tour}/reviews', [TourReviewController::class, 'index']);
+
+// Authenticated: Submit a review
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/tours/reviews', [TourReviewController::class, 'store']);
+});
+
+
 /**
  * Payment
  */
@@ -215,6 +228,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'checkout']);
     Route::post('/checkout/confirm', [CheckoutController::class, 'confirmWithSavedPM']);
+
 });
 
 
