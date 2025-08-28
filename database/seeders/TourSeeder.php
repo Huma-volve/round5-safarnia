@@ -37,6 +37,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Tips', 'Personal expenses', 'Optional activities'],
                 'what_to_bring' => ['Comfortable shoes', 'Sunscreen', 'Camera', 'Hat', 'Light clothes'],
                 'cancellation_policy' => 'Free cancellation up to 24 hours before the tour',
+                'transportation' => 'Car', // <-- هنا حددنا وسيلة النقل
+                'guide' => 'Expert guide', // <-- حقل جديد للمرشد
             ],
             [
                 'category_id' => $categories['historical']->id,
@@ -57,6 +59,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Tips', 'Personal expenses', 'Optional activities'],
                 'what_to_bring' => ['Comfortable walking shoes', 'Light clothes', 'Camera', 'Water bottle'],
                 'cancellation_policy' => 'Free cancellation up to 48 hours before the tour',
+                'transportation' => 'Bus', // <-- added
+                'guide' => 'Expert guide', // <-- added
             ],
             [
                 'category_id' => $categories['historical']->id,
@@ -77,6 +81,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Tips', 'Personal expenses', 'Shopping'],
                 'what_to_bring' => ['Modest clothing', 'Comfortable shoes', 'Camera', 'Respectful attitude'],
                 'cancellation_policy' => 'Free cancellation up to 12 hours before the tour',
+                'transportation' => 'Walk', // <-- added
+                'guide' => 'Local guide', // <-- added
             ],
 
             // Adventure Tours
@@ -99,6 +105,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Personal items', 'Sleeping bag', 'Tips'],
                 'what_to_bring' => ['Warm clothes', 'Sleeping bag', 'Personal toiletries', 'Camera', 'Comfortable shoes'],
                 'cancellation_policy' => 'Free cancellation up to 72 hours before the tour',
+                'transportation' => 'Bus', // <-- added
+                'guide' => 'Bedouin guide', // <-- added
             ],
             [
                 'category_id' => $categories['adventure']->id,
@@ -119,6 +127,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Personal items', 'Sleeping bag', 'Tips'],
                 'what_to_bring' => ['Warm clothes', 'Sleeping bag', 'Personal toiletries', 'Camera', 'Hiking boots'],
                 'cancellation_policy' => 'Free cancellation up to 48 hours before the tour',
+                'transportation' => 'Bus', // <-- added
+                'guide' => 'Bedouin guide', // <-- added
             ],
 
             // Cultural Tours
@@ -141,6 +151,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Tips', 'Personal purchases', 'Optional activities'],
                 'what_to_bring' => ['Comfortable clothes', 'Camera', 'Open mind', 'Respectful attitude'],
                 'cancellation_policy' => 'Free cancellation up to 24 hours before the tour',
+                'transportation' => 'Walk', // <-- added
+                'guide' => 'Local guide', // <-- added
             ],
             [
                 'category_id' => $categories['cultural']->id,
@@ -161,6 +173,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Tips', 'Personal expenses', 'Donations'],
                 'what_to_bring' => ['Modest clothing', 'Comfortable shoes', 'Camera', 'Respectful attitude'],
                 'cancellation_policy' => 'Free cancellation up to 12 hours before the tour',
+                'transportation' => 'Walk', // <-- added
+                'guide' => 'Local guide', // <-- added
             ],
 
             // Nature Tours
@@ -183,6 +197,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Personal insurance', 'Tips', 'Personal items'],
                 'what_to_bring' => ['Swimsuit', 'Towel', 'Sunscreen', 'Change of clothes', 'Camera'],
                 'cancellation_policy' => 'Free cancellation up to 48 hours before the tour',
+                'transportation' => 'car', // <-- added
+                'guide' => 'Expert guide', // <-- added
             ],
             [
                 'category_id' => $categories['nature']->id,
@@ -203,6 +219,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Tips', 'Personal expenses', 'Optional activities'],
                 'what_to_bring' => ['Comfortable shoes', 'Light clothes', 'Camera', 'Hat', 'Water bottle'],
                 'cancellation_policy' => 'Free cancellation up to 24 hours before the tour',
+                'transportation' => 'car', // <-- added
+                'guide' => 'Expert guide', // <-- added
             ],
 
             // Religious Tours
@@ -225,6 +243,8 @@ class TourSeeder extends Seeder
                 'excluded_services' => ['Personal equipment', 'Tips', 'Personal expenses'],
                 'what_to_bring' => ['Warm clothes', 'Hiking shoes', 'Water', 'Camera', 'Personal items'],
                 'cancellation_policy' => 'Free cancellation up to 72 hours before the tour',
+                'transportation' => 'car', // <-- added
+                'guide' => 'Expert guide', // <-- added
             ],
         ];
 
