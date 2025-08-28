@@ -131,6 +131,8 @@ class TourController extends Controller
             }),
             'duration' => $tour->duration_hours,
             'highlights' => $tour->highlights,
+            'guide'=>$tour->guide,
+            'transportation'=>$tour->transportation,
         ];
         return ApiResponse::sendResponse(200, 'Tour details retrieved successfully',$data);
     }
