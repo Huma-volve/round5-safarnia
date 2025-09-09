@@ -24,7 +24,7 @@ class ApiController extends Controller
     public function categoriesWithCount()
     {
         $categories = Category::withCount('tours')->get();
-        
+
         return response()->json([
             'status' => true,
             'data' => $categories->map(function($category) {
@@ -47,7 +47,7 @@ class ApiController extends Controller
         $categories = Category::with(['tours' => function($query) {
             $query->where('is_recommended', true)->take(3);
         }])->get();
-        
+
         return response()->json([
             'status' => true,
             'data' => $categories->map(function($category) {
@@ -81,7 +81,7 @@ class ApiController extends Controller
                                ->with(['category', 'availabilitySlots'])
                                ->take(6)
                                ->get();
-        
+
         return response()->json([
             'status' => true,
             'data' => [
@@ -100,7 +100,7 @@ class ApiController extends Controller
                         'title' => $tour->title,
                         'price' => $tour->price,
                         'rating' => $tour->rating,
-                        'image' => asset('storage/' . $tour->image),
+                        'image' => asset('public/storage/' . $tour->image),
                         'location' => $tour->location,
                         'category' => [
                             'id' => $tour->category->id ?? null,

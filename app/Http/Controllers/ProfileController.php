@@ -16,7 +16,7 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user()->load(['roomBookings', 'hotelReviews', 'flightBookings']);
-        
+
         return response()->json([
             'status' => true,
             'data' => [
@@ -26,7 +26,7 @@ class ProfileController extends Controller
                     'email' => $user->email,
                     'phone' => $user->phone,
                     'country' => $user->country,
-                    'image' => $user->image ? asset('storage/' . $user->image) : null,
+                    'image' => $user->image ? asset('public/storage/' . $user->image) : null,
                     'email_verified_at' => $user->email_verified_at,
                     'created_at' => $user->created_at?->format('Y-m-d H:i:s'),
                     'updated_at' => $user->updated_at?->format('Y-m-d H:i:s'),
@@ -66,15 +66,15 @@ class ProfileController extends Controller
         if ($request->has('name')) {
             $user->name = $request->name;
         }
-        
+
         if ($request->has('email')) {
             $user->email = $request->email;
         }
-        
+
         if ($request->has('phone')) {
             $user->phone = $request->phone;
         }
-        
+
         if ($request->has('country')) {
             $user->country = $request->country;
         }
@@ -85,7 +85,7 @@ class ProfileController extends Controller
             if ($user->image) {
                 Storage::disk('public')->delete($user->image);
             }
-            
+
             // Store new image
             $path = $request->file('image')->store('profiles', 'public');
             $user->image = $path;
@@ -103,7 +103,7 @@ class ProfileController extends Controller
                     'email' => $user->email,
                     'phone' => $user->phone,
                     'country' => $user->country,
-                    'image' => $user->image ? asset('storage/' . $user->image) : null,
+                    'image' => $user->image ? asset('public/storage/' . $user->image) : null,
                     'updated_at' => $user->updated_at?->format('Y-m-d H:i:s'),
                 ]
             ]
@@ -116,15 +116,15 @@ class ProfileController extends Controller
     public function deleteAccount()
     {
         $user = Auth::user();
-        
+
         // Delete user's image if exists
         if ($user->image) {
             Storage::disk('public')->delete($user->image);
         }
-        
+
         // Delete user account
         $user->delete();
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Account deleted successfully'
@@ -172,12 +172,12 @@ class ProfileController extends Controller
     public function bookingHistory()
     {
         $user = Auth::user();
-        
+
         $bookings = [
             'room_bookings' => $user->roomBookings()->with(['room.hotel'])->latest()->get(),
             'flight_bookings' => $user->flightBookings()->with(['flight'])->latest()->get(),
         ];
-        
+
         return response()->json([
             'status' => true,
             'data' => $bookings
