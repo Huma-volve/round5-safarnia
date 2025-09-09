@@ -209,6 +209,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::delete('/favorites/remove/{tourId}', [FavoriteController::class, 'removeFromFavorite'])
         ->middleware('auth:sanctum');
+
+    Route::get('/favorites', [FavoriteController::class, 'getFavorites'])
+        ->middleware('auth:sanctum');
 });
 
 

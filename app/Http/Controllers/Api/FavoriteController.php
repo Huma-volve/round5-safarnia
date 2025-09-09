@@ -67,4 +67,18 @@ class FavoriteController extends Controller
 
         return ApiResponse::sendResponse(200, 'Tour removed from your favorite successfully');
     }
+
+    public function getFavorites()
+    {
+        $userId = Auth::user()->id;
+
+        // جلب جميع التورز الموجودة في المفضلة مع تفاصيلها
+        $favorites = DB::table('favorites')
+            ->join('tours', 'favorites.tour_id', '=', 'tours.id')
+            ->where('favorites.user_id', $userId)
+            ->select('tours.*', 'favorites.created_at as favorited_at')
+            ->get();
+
+        return ApiResponse::sendResponse(200, 'Favorites retrieved successfully', $favorites);
+    }
 }
