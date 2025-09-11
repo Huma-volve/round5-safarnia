@@ -77,6 +77,15 @@ class BookingController extends Controller
                 'payment_id' => $charge->id, // save Stripe charge ID
             ]);
 
+            // Step 5: Return success response
+            return response()->json([
+                'message' => 'Car rented successfully!',
+                'booking' => $booking->load('car.category'), // include car + category
+                'total_price' => number_format($totalPrice, 2),
+                'rental_days' => $days,
+                'payment_status' => 'paid'
+            ], 201); // 201 = Created
+
         } catch (\Stripe\Exception\CardException $e) {
             return response()->json([
                 'message' => 'Payment failed: ' . $e->getError()->message
@@ -86,25 +95,6 @@ class BookingController extends Controller
                 'message' => 'An error occurred: ' . $e->getMessage()
             ], 500);
         }
-
-        // Step 5: Create the booking
-        $booking = Booking::create([
-            'user_id' => Auth::id(), // requires login
-            'car_id' => $car->id,
-            'pickup_date' => $request->pickup_date,
-            'return_date' => $request->return_date,
-            'total_price' => $totalPrice,
-            'status' => 'confirmed',
-        ]);
-
-        // Step 6: Return success response
-        return response()->json([
-            'message' => '🎉 Car rented successfully!',
-            'booking' => $booking->load('car.category'), // include car + category
-            'total_price' => number_format($totalPrice, 2),
-            'rental_days' => $days,
-            'payment_status' => 'paid' // simulated
-        ], 201); // 201 = Created
     }
 
     /**

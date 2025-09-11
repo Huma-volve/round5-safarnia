@@ -16,6 +16,7 @@ class TourBookingResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'tour_id' => $this->tourSlot->tour->id ?? null,
             'tour_title' => $this->tourSlot->tour->title ?? 'N/A',
             'slot_time' => $this->tourSlot->start_time . ' - ' . $this->tourSlot->end_time,
             'status' => $this->status,
