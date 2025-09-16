@@ -159,6 +159,7 @@ Route::middleware('auth:sanctum')->group(function () {
  * Cars
  */
 Route::get('/cars', [CarController::class, 'index']);
+Route::get('/cars/brands', [CarController::class, 'brands']);
 Route::get('/cars/{id}', [CarController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {

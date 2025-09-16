@@ -83,4 +83,17 @@ class CarController extends Controller
         return response()->json($car);
     }
 
+    public function brands()
+    {
+        $brands = Car::query()
+            ->selectRaw('brand, COUNT(*) as cars_count')
+            ->groupBy('brand')
+            ->orderBy('brand')
+            ->get();
+
+        return response()->json([
+            'data' => $brands
+        ]);
+    }
+
 }
