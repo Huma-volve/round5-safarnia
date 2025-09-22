@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\FlightBooking;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Api\FlightBookingRequest;
 
 class FlightBookingController extends Controller
@@ -19,25 +20,34 @@ class FlightBookingController extends Controller
     {
         $validatedData = $request->validated();
 
-        $seat = FlightSeat::where('id', $request->seat_id)
-            ->where('status', 'available')
-            ->firstOrFail();
+        $flight = Flight::findOrFail($validatedData['flight_id']);
 
-        $booking = FlightBooking::create([
-            'user_id' => auth()->id(),
-            'flight_id' => $validatedData['flight_id'],
-            'seat_id' => $seat->id,
-            'booking_date' => now()->toDateString(),
-            'total_price' => Flight::find($validatedData['flight_id'])->price,
-            'status' => 'pending',
-        ]);
+        return DB::transaction(function () use ($validatedData, $flight) {
+            $seat = FlightSeat::where('id', $validatedData['seat_id'])
+                ->where('status', 'available')
+                ->firstOrFail();
 
-        $seat->update(['status' => 'booked']);
+            // Ensure selected seat belongs to the same flight
+            if ((int)($seat->flight_id) !== (int)($flight->id)) {
+                return ApiResponse::sendResponse(422, 'Selected seat does not belong to the given flight');
+            }
 
-        return ApiResponse::sendResponse(201, 'Flight booking created successfully', [
-            'booking' => $booking,
-            'seat' => $seat,
-        ]);
+            $booking = FlightBooking::create([
+                'user_id' => auth()->id(),
+                'flight_id' => $flight->id,
+                'seat_id' => $seat->id,
+                'booking_date' => now()->toDateString(),
+                'total_price' => $flight->price,
+                'status' => 'pending',
+            ]);
+
+            $seat->update(['status' => 'booked']);
+
+            return ApiResponse::sendResponse(201, 'Flight booking created successfully', [
+                'booking' => $booking,
+                'seat' => $seat,
+            ]);
+        });
     }
 
     public function myBookingsFlight()
@@ -69,7 +79,16 @@ class FlightBookingController extends Controller
         $booking->update([
             'seat_id' => $validatedData['seat_id'],
         ]);
-        FlightSeat::where('id', $validatedData['seat_id'])->update(['status' => 'booked']);
+        
+        $newSeat = FlightSeat::findOrFail($validatedData['seat_id']);
+        // Ensure new seat belongs to the same flight
+        if ((int)$newSeat->flight_id !== (int)$booking->flight_id) {
+            // revert old seat to booked and return error
+            $oldSeat->update(['status' => 'booked']);
+            return ApiResponse::sendResponse(422, 'Selected seat does not belong to the booked flight');
+        }
+
+        $newSeat->update(['status' => 'booked']);
         return ApiResponse::sendResponse(200, 'Flight booking updated successfully', $booking);
     }
 
