@@ -21,15 +21,18 @@ class HotelReviewService
         // Fetch hotel_id based on room_id
         $room = Room::findOrFail($roomId);
         $hotelId = $room->hotel_id;
-        // Check if user has a booking in this hotel
-        $hasBooking = RoomBooking::where('user_id', $userId)
-            ->whereHas('room', function ($query) use ($hotelId) {
-                $query->where('hotel_id', $hotelId);
-            })
-            ->exists();
+        // Optionally require a booking before allowing a review (default: disabled)
+        $requireBooking = (bool) env('REQUIRE_BOOKING_FOR_REVIEW', false);
+        if ($requireBooking) {
+            $hasBooking = RoomBooking::where('user_id', $userId)
+                ->whereHas('room', function ($query) use ($hotelId) {
+                    $query->where('hotel_id', $hotelId);
+                })
+                ->exists();
 
-        if (!$hasBooking) {
-            return ApiResponse::sendResponse(403, 'You must have a Booking in this hotel to leave a review.');
+            if (!$hasBooking) {
+                return ApiResponse::sendResponse(403, 'You must have a Booking in this hotel to leave a review.');
+            }
         }
 
         // Optional image upload
